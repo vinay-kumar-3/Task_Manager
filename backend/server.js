@@ -10,9 +10,9 @@ dotenv.config();
 const PORT = process.env.PORT;
 
 const app = express();
-app.use(express.json()); // allows us to accept Json data in the body 
+app.use(express.json());
 app.use(cors({
-    origin: "http://localhost:5173", // Change to your frontend URL
+    origin: "*", 
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   }));

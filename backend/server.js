@@ -4,10 +4,13 @@ import cors from 'cors';
 import { connectDB } from './config/db.js'; 
 import Task from './model/product.model.js';
 import mongoose from 'mongoose';
+import path from 'path';
 
 
 dotenv.config();
 const PORT = process.env.PORT;
+
+const __dirname = path.resolve();
 
 const app = express();
 app.use(express.json());
@@ -18,7 +21,7 @@ app.use(cors({
   }));
 
 
-app.get('/', async (req,res) => {
+app.get('/api/tasks', async (req,res) => {
     try {
         const tasks = await Task.find({});
         res.status(201).json({success:true,data:tasks});
@@ -29,7 +32,7 @@ app.get('/', async (req,res) => {
     
 })
 
-app.post('/', async (req , res)=>{
+app.post('/api/tasks', async (req , res)=>{
     const task = req.body
 
     const newTask = new Task(task);
@@ -43,7 +46,7 @@ app.post('/', async (req , res)=>{
     }
 })
 
-app.put('/:id', async (req , res)=>{
+app.put('/api/tasks/:id', async (req , res)=>{
     const {id} = req.params;
     const task = req.body;
 
@@ -60,7 +63,7 @@ app.put('/:id', async (req , res)=>{
     }
 })
 
-app.delete('/:id',async (req,res) => {
+app.delete('/api/tasks/:id',async (req,res) => {
     const {id} = req.params;
 
     try {
@@ -71,6 +74,14 @@ app.delete('/:id',async (req,res) => {
         res.status(404).json({success:false,message:"Task not found"})
     }
 })
+
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(path.join(__dirname,"/frontend/dist")));
+
+    app.get("*",(req,res)=>{
+        res.sendFile(path.resolve(__dirname,"frontend","dist","index.html"));
+    })
+}
 
 app.listen(PORT,()=>{
     connectDB();

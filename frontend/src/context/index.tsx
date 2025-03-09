@@ -48,7 +48,7 @@ const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const res = await fetch("http://localhost:5050/");
+        const res = await fetch("http://localhost:5050/api/tasks");
         const data = await res.json();
         setTasks(data.data);
       } catch (error) {
@@ -64,7 +64,7 @@ const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
     event.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5050/", {
+      const res = await fetch("http://localhost:5050/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newTask), // ✅ No `_id` sent
@@ -90,7 +90,7 @@ const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
   const handleEditTask = async (event: React.FormEvent<HTMLFormElement>) =>{
     event.preventDefault();
     try {
-      const response = await fetch(`http://localhost:5050/${editTask._id}`, {
+      const response = await fetch(`http://localhost:5050/api/tasks/${editTask._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -118,7 +118,7 @@ const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
 
   const handleDeleteTask = async (taskId: string) => {
     try {
-      const response = await fetch(`http://localhost:5050/${taskId}`, {
+      const response = await fetch(`http://localhost:5050/api/tasks/${taskId}`, {
         method: "DELETE",
       });
   
@@ -144,7 +144,7 @@ const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
   
     const updatedTask = { ...taskToUpdate, status: newStatus };
     try {
-      const response = await fetch(`http://localhost:5050/${taskToUpdate._id}`, {
+      const response = await fetch(`http://localhost:5050/api/tasks/${taskToUpdate._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
